@@ -2,7 +2,15 @@
 Silly Fabric client mod that simulates high ping by delaying network packets (client to server and/or server to client) inside Minecraft’s Netty connection pipeline. ​
 
 
+WARNING: This is a fabric mod that manipulates packets!! Do not distribute or use this on servers where it would give unfair advantages. 
+Respect Mojang/Microsoft terms of service and individual server rules. 
 
+
+
+## Planned Features TODO!!!
+*   [ ] GUI for easier configs
+*   [ ] Custom keybinds system
+*   [ ] Random jitter mode and offset, for faking unstable lag!
 
 # How to use?
 
@@ -12,4 +20,14 @@ Silly Fabric client mod that simulates high ping by delaying network packets (cl
 | **.ping**    | `.ping <send\|recv> <ms>` | Sets the delay in ms. Use `send` for packets from you. Or `recv` for packets you receive!                           |
 
 
-TODO: Add a GUI for config, add custom keybinds!
+
+### An example for you:
+*   `.ping send 200` (Adds 200ms delay to your clicks/attacks) !!
+
+## Installation
+1. Have a fabric loader! [Fabric Loader](https://fabricmc.net/)!
+2. Download the **PurplePing** `.jar` file from Releases or build it from src.
+3. Drop the mod into your mods folder!
+4. Launch the game!
+5. Profit.
+
