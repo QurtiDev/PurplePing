@@ -3,7 +3,7 @@ Silly Fabric client mod that simulates high ping by delaying network packets (cl
 
 
 WARNING: This is a fabric mod that manipulates packets!! Do not distribute or use this on servers where it would give unfair advantages. 
-Respect Mojang/Microsoft terms of service and individual server rules. 
+Respect Mojang/Microsoft ToS and individual server rules. 
 
 
 
