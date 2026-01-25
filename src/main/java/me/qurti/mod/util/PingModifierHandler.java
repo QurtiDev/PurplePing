@@ -95,7 +95,11 @@ public class PingModifierHandler extends ChannelDuplexHandler {
         }
 
         long executeTime = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(delayMs);
+        if (msg instanceof ByteBuf) {
+            ((ByteBuf) msg).retain();
+        }
         outgoingQueue.offer(new DelayedOutgoingPacket(msg, promise, executeTime));
+
         scheduleOutgoingProcessing(ctx);
     }
 
@@ -153,6 +157,15 @@ public class PingModifierHandler extends ChannelDuplexHandler {
     }
 
     private void processOutgoingQueue(ChannelHandlerContext ctx) {
+        // Delayed tasks shouldn't be able to fire
+        if (!active) {
+            processingOutgoing.set(false);
+            return;
+        }
+
+
+
+
         try {
             boolean needsFlush = false;
             while (true) {
@@ -202,6 +215,13 @@ public class PingModifierHandler extends ChannelDuplexHandler {
     }
 
     private void processIncomingQueue(ChannelHandlerContext ctx) {
+
+
+        if (!active) {
+            processingIncoming.set(false);
+            return;
+        }
+
         try {
             while (true) {
                 DelayedIncomingPacket delayed = incomingQueue.peek();
@@ -233,24 +253,38 @@ public class PingModifierHandler extends ChannelDuplexHandler {
     }
 
     private void flushAll() {
-        ChannelHandlerContext context = this.ctx;
-        if (context == null || !context.channel().isOpen()) {
-            outgoingQueue.clear();
-            incomingQueue.clear();
-            return;
-        }
         active = false;
+        ChannelHandlerContext context = this.ctx;
+
+        // Flush outgoing q
         DelayedOutgoingPacket outgoing;
         while ((outgoing = outgoingQueue.poll()) != null) {
-            if (context.channel().isOpen()) context.write(outgoing.packet, outgoing.promise);
+            if (context != null && context.channel().isOpen()) {
+                context.write(outgoing.packet, outgoing.promise);
+            } else if (outgoing.packet instanceof ByteBuf) {
+                ((ByteBuf) outgoing.packet).release();
+            }
         }
-        if (context.channel().isOpen()) context.flush();
+
+        // FLush writes if possible, safet
+        if (context != null && context.channel().isOpen()) {
+            context.flush();
+        }
+
+        //Flush incoming q
         DelayedIncomingPacket incoming;
         while ((incoming = incomingQueue.poll()) != null) {
-            if (context.channel().isOpen()) context.fireChannelRead(incoming.packet);
+            if (context != null && context.channel().isOpen()) {
+                context.fireChannelRead(incoming.packet);
+            } else if (incoming.packet instanceof ByteBuf) {
+                ((ByteBuf) incoming.packet).release();
+            }
         }
+
+        // Reset processing flags so scheduled tasks exit safely!
         processingOutgoing.set(false);
         processingIncoming.set(false);
+
     }
 
 
@@ -265,10 +299,16 @@ public class PingModifierHandler extends ChannelDuplexHandler {
 
 
     // func if packet is keep alive
+    // Caches class names
     private static boolean isKeepAlivePacket(Packet<?> packet) {
-        String className = packet.getClass().getSimpleName();
-        return className.contains("KeepAlive") || className.contains("Pong") || className.contains("QueryPing");
+        Class<?> cls = packet.getClass();
+        String name = cls.getName();
+        return name.contains("KeepAlive")
+                || name.contains("Pong")
+                || name.contains("QueryPing");
     }
+
+
 
 
 
