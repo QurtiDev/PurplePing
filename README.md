@@ -31,3 +31,4 @@ Respect Mojang/Microsoft ToS and individual server rules.
 4. Launch the game!
 5. Profit.
 
+Curse forge page [here](https://www.curseforge.com/minecraft/mc-mods/purpleping)
