@@ -32,7 +32,7 @@ Respect Mojang/Microsoft ToS and individual server rules.
 *   `.ping send 200` (Adds 200ms delay to your clicks/attacks) !!
 
 ## Installation
-1. Have a fabric loader! [Fabric Loader](https://fabricmc.net/)!
+1. Have a [Fabric Loader](https://fabricmc.net/)!
 2. Download the **PurplePing** `.jar` file from Releases or build it from src.
 3. Drop the mod into your mods folder!
 4. Launch the game!
