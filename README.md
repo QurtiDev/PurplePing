@@ -1,4 +1,11 @@
-# PurplePing
+
+
+<p align="center">
+  <img src="src/main/resources/assets/modid/icon.png" width="150" alt="PurplePing Icon">
+</p>
+
+<h1 align="center">PurplePing</h1>
+
 Silly Fabric client mod that simulates high ping by delaying network packets (client to server and/or server to client) inside Minecraft’s Netty connection pipeline. ​
 
 
