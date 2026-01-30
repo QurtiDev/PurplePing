@@ -32,4 +32,5 @@ Respect Mojang/Microsoft ToS and individual server rules.
 5. Profit.
 
 CurseForge page [here](https://www.curseforge.com/minecraft/mc-mods/purpleping)
+
 Modrinth page [here](https://modrinth.com/mod/purpleping)
